@@ -6,11 +6,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
         @font-face {
-        font-family: 'AL-Kanz';
-        src: url('Al-Kanz for Windows.ttf') format('truetype');  }
+            font-family: 'AL-Kanz';
+            src: url('Al-Kanz for Windows.ttf') format('truetype'); 
+        }
         @font-face {
-        font-family: 'Kanz-al-Marjaan';
-        src: url('Kanz-al-Marjaan.ttf') format('truetype');  }
+            font-family: 'Kanz-al-Marjaan';
+            src: url('Kanz-al-Marjaan.ttf') format('truetype'); 
+        }
         body { font-family: 'Kanz-al-Marjaan', serif; background: #1a1a2e; color: #ecf0f1; margin: 0; padding: 20px; display: flex; flex-direction: row; gap: 30px; justify-content: center; }
         .editor-panel { background: #ffffff; color: #2c3e50; padding: 25px; border-radius: 15px; width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-top: 8px solid #d4af37; height: 95vh; overflow-y: auto; }
         h2 { font-family: 'Kan-al-Marjaan', serif; text-align: center; color: #1a5276; margin-top: 0; }
@@ -18,6 +20,8 @@
         label { display: block; font-size: 0.8em; font-weight: bold; margin-bottom: 4px; color: #34495e; }
         input[type="text"], select, input[type="file"], input[type="range"], input[type="color"] { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #bdc3c7; box-sizing: border-box; font-family: 'Amiri'; }
         input[type="color"] { height: 40px; cursor: pointer; padding: 2px; }
+        .inline-group { display: flex; gap: 10px; }
+        .inline-group div { flex: 1; }
         canvas { border: 10px solid #fff; box-shadow: 0 15px 45px rgba(0,0,0,0.4); max-width: 550px; height: auto; background: #2c3e50; }
         button { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Aref Ruqaa'; font-weight: bold; background: #27ae60; color: white; font-size: 1.1em; margin-top: 10px; }
     </style>
@@ -27,8 +31,8 @@
     <div class="editor-panel">
         <h2>Post Editor</h2>
         
-         <div class="field">
-            <label>Select Marhala</label>
+        <div class="field">
+            <label>1. Select Marhala</label>
             <select id="templateSelect" onchange="updateBackground()">
                 <option value="">--Select Marhala--</option>
                 <option value="Balad.png">Surat al Balad</option>
@@ -52,42 +56,41 @@
             <label>2. Institute Location</label>
             <select id="instName">
                 <option value="">-- Select Location --</option>
-           <option value="قسم التحفيظ - جمالي محلة">جمالي محلة</option>
-<option value="قسم التحفيظ - المحلة البرهانية">المحلة البرهانية</option>
-<option value="قسم التحفيظ - برهاني باغ محلة">برهاني باغ محلة</option>
-<option value="قسم التحفيظ - المحلة الفخرية">المحلة الفخرية</option>
-<option value="قسم التحفيظ - المحلة المحمدية">المحلة المحمدية</option>
-<option value="قسم التحفيظ - عزي محلة">عزي محلة</option>
-<option value="قسم التحفيظ - طاهري محلة">طاهري محلة</option>
-<option value="قسم التحفيظ - محمدي محلة">محمدي محلة</option>
-<option value="قسم التحفيظ - صالح محلة">صالح محلة</option>
-<option value="قسم التحفيظ - اْدم محلة">اْدم محلة</option>
-<option value="قسم التحفيظ - عيسى محلة">عيسى محلة</option>
-<option value="قسم التحفيظ - سيفي محلة">سيفي محلة</option>
-<option value="قسم التحفيظ - ابراهيم محلة">ابراهيم محلة</option>
-<option value="قسم التحفيظ - يوسفي محلة">يوسفي محلة</option>
-<option value="قسم التحفيظ - برهاني محلة">برهاني محلة</option>
-<option value="قسم التحفيظ - قطبي محلة">قطبي محلة</option>
-<option value="قسم التحفيظ - حسني محلة">حسني محلة</option>
-<option value="قسم التحفيظ - حسيني محلة">حسيني محلة</option>
-<option value="قسم التحفيظ - برهاني نككر">برهاني نككر</option>
-<option value="قسم التحفيظ - بدري محلة">بدري محلة</option>
-<option value="قسم التحفيظ - ملتان">ملتان</option>
-<option value="قسم التحفيظ - لاهور">لاهور</option>
-<option value="قسم التحفيظ - ايبطاباد">ايبطاباد</option>
-<option value="قسم التحفيظ - راولثثندي">Rawalpindi</option>
-<option value="روضة العلم البرهانية - راولثثندٌي">Rawdatul Ilm il Burhaniyah-Rawalpindi</option>
-<option value="روضة العلم البرهانية - حيدراْباد">Rawdatul Ilm il Burhaniyah-Hyderabad</option>
-<option value="قسم التحفيظ - كوئطه">Quetta</option>
-<option value="المدرسة السيفية البرهانية - شبيراباد">MSB-Shabbirabad</option>
-<option value="المدرسة السيفية البرهانية - المحلة البرهانية">MSB-Hyderi</option>
-<option value="بدري هائي اسكول">BHS</option>
-<option value="حكيمي اسكول">حكيمي اسكول</option>
-<option value="حسامية اسكول">حسامية اسكول</option>
-<option value="سيفية بوئيز هائي اسكول">SBHS</option>
-<option value="سيفية ككرلز اسكول">SGS</option>
-<option value="روضة القراْن الكريم">RQK</option>
-
+                <option value="قسم التحفيظ - جمالي محلة">جمالي محلة</option>
+                <option value="قسم التحفيظ - المحلة البرهانية">المحلة البرهانية</option>
+                <option value="قسم التحفيظ - برهاني باغ محلة">برهاني باغ محلة</option>
+                <option value="قسم التحفيظ - المحلة الفخرية">المحلة الفخرية</option>
+                <option value="قسم التحفيظ - المحلة المحمدية">المحلة المحمدية</option>
+                <option value="قسم التحفيظ - عزي محلة">عزي محلة</option>
+                <option value="قسم التحفيظ - طاهري محلة">طاهري محلة</option>
+                <option value="قسم التحفيظ - محمدي محلة">محمدي محلة</option>
+                <option value="قسم التحفيظ - صالح محلة">صالح محلة</option>
+                <option value="قسم التحفيظ - اْدم محلة">اْدم محلة</option>
+                <option value="قسم التحفيظ - عيسى محلة">عيسى محلة</option>
+                <option value="قسم التحفيظ - سيفي محلة">سيفي محلة</option>
+                <option value="قسم التحفيظ - ابراهيم محلة">ابراهيم محلة</option>
+                <option value="قسم التحفيظ - يوسفي محلة">يوسفي محلة</option>
+                <option value="قسم التحفيظ - برهاني محلة">برهاني محلة</option>
+                <option value="قسم التحفيظ - قطبي محلة">قطبي محلة</option>
+                <option value="قسم التحفيظ - حسني محلة">حسني محلة</option>
+                <option value="قسم التحفيظ - حسيني محلة">حسيني محلة</option>
+                <option value="قسم التحفيظ - برهاني نككر">برهاني نككر</option>
+                <option value="قسم التحفيظ - بدري محلة">بدري محلة</option>
+                <option value="قسم التحفيظ - ملتان">ملتان</option>
+                <option value="قسم التحفيظ - لاهور">لاهور</option>
+                <option value="قسم التحفيظ - ايبطاباد">ايبطاباد</option>
+                <option value="قسم التحفيظ - راولثثندي">Rawalpindi</option>
+                <option value="روضة العلم البرهانية - راولثثندٌي">Rawdatul Ilm il Burhaniyah-Rawalpindi</option>
+                <option value="روضة العلم البرهانية - حيدراْباد">Rawdatul Ilm il Burhaniyah-Hyderabad</option>
+                <option value="قسم التحفيظ - كوئطه">Quetta</option>
+                <option value="المدرسة السيفية البرهانية - شبيراباد">MSB-Shabbirabad</option>
+                <option value="المدرسة السيفية البرهانية - المحلة البرهانية">MSB-Hyderi</option>
+                <option value="بدري هائي اسكول">BHS</option>
+                <option value="حكيمي اسكول">حكيمي اسكول</option>
+                <option value="حسامية اسكول">حسامية اسكول</option>
+                <option value="سيفية بوئيز هائي اسكول">SBHS</option>
+                <option value="سيفية ككرلز اسكول">SGS</option>
+                <option value="روضة القراْن الكريم">RQK</option>
             </select>
         </div>
 
@@ -129,7 +132,21 @@
         </div>
 
         <div class="field">
-            <label>6. Photo Controls</label>
+            <label>6. Ikhtebaar Counts</label>
+            <div class="inline-group">
+                <div>
+                    <label>Marhala Count (Left)</label>
+                    <input type="text" id="marhalaCount" placeholder="e.g. 1">
+                </div>
+                <div>
+                    <label>Year Count (Right)</label>
+                    <input type="text" id="yearCount" placeholder="e.g. 8">
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>7. Photo Controls</label>
             <input type="file" id="studentUpload" accept="image/*">
             <input type="range" id="photoZoom" min="0.5" max="3.0" step="0.1" value="1">
             <input type="range" id="photoYOffset" min="-500" max="500" value="0">
@@ -156,12 +173,15 @@
             age: { x: 630, y: 850 },
             dateX: 890,
             dateH_Y: 1310,
-            dateG_Y: 1380
+            dateG_Y: 1380,
+            countLeftX: 180,
+            countRightX: 1044,
+            countY: 1615
         };
 
         const staticFont = "Kanz-al-Marjaan"; 
 
-        const controls = ['instName', 'stdFirstName', 'nameColor', 'stdFatherName', 'stdSurname', 'stdAge', 'dateHijri', 'dateGreg', 'photoZoom', 'photoYOffset', 'fontSelect', 'dayArabic'];
+        const controls = ['instName', 'stdFirstName', 'nameColor', 'stdFatherName', 'stdSurname', 'stdAge', 'dateHijri', 'dateGreg', 'photoZoom', 'photoYOffset', 'fontSelect', 'dayArabic', 'marhalaCount', 'yearCount'];
         controls.forEach(id => document.getElementById(id).addEventListener('input', draw));
 
         function drawText(text, x, y, maxWidth, baseSize, font, isBold, color, align='right') {
@@ -170,7 +190,7 @@
             ctx.textAlign = align;
             ctx.fillStyle = color;
             ctx.font = `${isBold ? 'bold' : ''} ${size}px "${font}"`;
-            while (ctx.measureText(text).width > maxWidth && size > 12) {
+            while (maxWidth && ctx.measureText(text).width > maxWidth && size > 12) {
                 size--;
                 ctx.font = `${isBold ? 'bold' : ''} ${size}px "${font}"`;
             }
@@ -227,6 +247,19 @@
 
             ctx.direction = 'ltr';
             drawText(document.getElementById('dateGreg').value, POS.dateX, POS.dateG_Y, 600, 52, staticFont, false, '#e8f6ff', 'right');
+
+            // 6. Ikhtebaar Counts (Bottom Corners)
+            ctx.save();
+            ctx.direction = 'rtl';
+            const marhalaCountText = document.getElementById('marhalaCount').value;
+            const yearCountText = document.getElementById('yearCount').value;
+
+            // Specific Marhala Ikhtebaar Count (Bottom-Left)
+            drawText(marhalaCountText, POS.countLeftX, POS.countY, null, 48, staticFont, true, '#1a5276', 'center');
+
+            // Current Year Total Ikhtebaar Count (Bottom-Right)
+            drawText(yearCountText, POS.countRightX, POS.countY, null, 48, staticFont, true, '#1a5276', 'center');
+            ctx.restore();
         }
 
         function updateBackground() {
