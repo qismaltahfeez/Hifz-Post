@@ -15,15 +15,18 @@
         }
         body { font-family: 'Kanz-al-Marjaan', serif; background: #1a1a2e; color: #ecf0f1; margin: 0; padding: 20px; display: flex; flex-direction: row; gap: 30px; justify-content: center; }
         .editor-panel { background: #ffffff; color: #2c3e50; padding: 25px; border-radius: 15px; width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-top: 8px solid #d4af37; height: 95vh; overflow-y: auto; }
-        h2 { font-family: 'Kan-al-Marjaan', serif; text-align: center; color: #1a5276; margin-top: 0; }
+        h2 { font-family: 'Kanz-al-Marjaan', serif; text-align: center; color: #1a5276; margin-top: 0; }
         .field { margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; }
         label { display: block; font-size: 0.8em; font-weight: bold; margin-bottom: 4px; color: #34495e; }
-        input[type="text"], select, input[type="file"], input[type="range"], input[type="color"] { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #bdc3c7; box-sizing: border-box; font-family: 'Amiri'; }
+        input[type="text"], select, input[type="file"], input[type="range"], input[type="color"] { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #bdc3c7; box-sizing: border-box; font-family: 'Amiri'; margin-bottom: 4px; }
         input[type="color"] { height: 40px; cursor: pointer; padding: 2px; }
         .inline-group { display: flex; gap: 10px; }
         .inline-group div { flex: 1; }
         canvas { border: 10px solid #fff; box-shadow: 0 15px 45px rgba(0,0,0,0.4); max-width: 550px; height: auto; background: #2c3e50; }
-        button { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Aref Ruqaa'; font-weight: bold; background: #27ae60; color: white; font-size: 1.1em; margin-top: 10px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        button { flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Aref Ruqaa'; font-weight: bold; background: #27ae60; color: white; font-size: 1.1em; transition: 0.2s; }
+        button:hover { opacity: 0.9; }
+        button.clear-btn { background: #c0392b; }
     </style>
 </head>
 <body>
@@ -53,9 +56,9 @@
         </div>
 
         <div class="field">
-            <label>2. Institute Location</label>
-            <select id="instName">
-                <option value="">-- Select Location --</option>
+            <label>2. Institute Location (Type or Select)</label>
+            <input type="text" id="instName" list="instList" placeholder="Type or select location...">
+            <datalist id="instList">
                 <option value="قسم التحفيظ - جمالي محلة">جمالي محلة</option>
                 <option value="قسم التحفيظ - المحلة البرهانية">المحلة البرهانية</option>
                 <option value="قسم التحفيظ - برهاني باغ محلة">برهاني باغ محلة</option>
@@ -91,7 +94,9 @@
                 <option value="سيفية بوئيز هائي اسكول">SBHS</option>
                 <option value="سيفية ككرلز اسكول">SGS</option>
                 <option value="روضة القراْن الكريم">RQK</option>
-            </select>
+            </datalist>
+            <label style="font-size: 0.7em; margin-top:4px;">Color for Institute Name</label>
+            <input type="color" id="instColor" value="#e8f6ff">
         </div>
 
         <div class="field">
@@ -103,7 +108,7 @@
                 <option value="Al-Kanz for Windows">Al-Kanz</option>
                 <option value="Kanz-al-Marjaan">Kanz al Marjaan</option>
             </select>
-            <label style="font-size: 0.7em; margin-top:5px;">Color for Student Names</label>
+            <label style="font-size: 0.7em; margin-top:4px;">Color for Student Names</label>
             <input type="color" id="nameColor" value="#1a5276">
         </div>
 
@@ -148,11 +153,18 @@
         <div class="field">
             <label>7. Photo Controls</label>
             <input type="file" id="studentUpload" accept="image/*">
+            <label style="font-size: 0.7em;">Zoom</label>
             <input type="range" id="photoZoom" min="0.5" max="3.0" step="0.1" value="1">
+            <label style="font-size: 0.7em;">Vertical Position</label>
             <input type="range" id="photoYOffset" min="-500" max="500" value="0">
+            <label style="font-size: 0.7em;">Image Blur</label>
+            <input type="range" id="photoBlur" min="0" max="20" step="0.5" value="0">
         </div>
 
-        <button onclick="download()">Download PNG</button>
+        <div class="btn-group">
+            <button onclick="download()">Download PNG</button>
+            <button class="clear-btn" onclick="clearAll()">Clear All</button>
+        </div>
     </div>
 
     <div class="preview-container">
@@ -176,12 +188,18 @@
             dateG_Y: 1380,
             countLeftX: 180,
             countRightX: 1044,
-            countY: 1615
+            countTitleY: 1565,
+            countY: 1625
         };
 
         const staticFont = "Kanz-al-Marjaan"; 
 
-        const controls = ['instName', 'stdFirstName', 'nameColor', 'stdFatherName', 'stdSurname', 'stdAge', 'dateHijri', 'dateGreg', 'photoZoom', 'photoYOffset', 'fontSelect', 'dayArabic', 'marhalaCount', 'yearCount'];
+        const controls = [
+            'instName', 'instColor', 'stdFirstName', 'nameColor', 
+            'stdFatherName', 'stdSurname', 'stdAge', 'dateHijri', 
+            'dateGreg', 'photoZoom', 'photoYOffset', 'photoBlur', 
+            'fontSelect', 'dayArabic', 'marhalaCount', 'yearCount'
+        ];
         controls.forEach(id => document.getElementById(id).addEventListener('input', draw));
 
         function drawText(text, x, y, maxWidth, baseSize, font, isBold, color, align='right') {
@@ -200,21 +218,30 @@
         function draw() {
             const studentFont = document.getElementById('fontSelect').value;
             const chosenColor = document.getElementById('nameColor').value;
+            const chosenInstColor = document.getElementById('instColor').value;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             if (bgImage.complete && bgImage.src) ctx.drawImage(bgImage, 0, 0, 1224, 1776);
 
-            // 1. Institute (Static Font - Glow)
+            // 1. Institute (Static Font - Glow + Custom Color)
             ctx.save();
             ctx.direction = 'rtl';
             ctx.shadowColor = '#00d4ff'; ctx.shadowBlur = 15;
-            drawText(document.getElementById('instName').value, POS.inst.x, POS.inst.y, POS.inst.maxWidth, 75, staticFont, true, '#e8f6ff', 'center');
+            drawText(document.getElementById('instName').value, POS.inst.x, POS.inst.y, POS.inst.maxWidth, 75, staticFont, true, chosenInstColor, 'center');
             ctx.restore();
 
-            // 2. Photo
+            // 2. Photo (with Zoom, Y-Offset, and Blur)
             if (studentImage) {
                 ctx.save();
-                ctx.beginPath(); ctx.arc(POS.photo.x, POS.photo.y, POS.photo.radius, 0, Math.PI * 2); ctx.clip();
+                ctx.beginPath(); 
+                ctx.arc(POS.photo.x, POS.photo.y, POS.photo.radius, 0, Math.PI * 2); 
+                ctx.clip();
+                
+                const blurVal = parseFloat(document.getElementById('photoBlur').value);
+                if (blurVal > 0) {
+                    ctx.filter = `blur(${blurVal}px)`;
+                }
+
                 const zoom = parseFloat(document.getElementById('photoZoom').value);
                 const yOff = parseFloat(document.getElementById('photoYOffset').value);
                 const ratio = Math.max((POS.photo.radius*2) / studentImage.width, (POS.photo.radius*2) / studentImage.height) * zoom;
@@ -227,7 +254,7 @@
             ctx.direction = 'rtl';
             ctx.shadowColor = 'rgba(0,0,0,0.3)'; ctx.shadowBlur = 5; ctx.shadowOffsetY = 3;
             drawText(document.getElementById('stdFirstName').value, POS.nameFirst.x, POS.nameFirst.y, POS.nameFirst.maxWidth, 75, studentFont, true, chosenColor);
-            const fullNameLine = document.getElementById('stdFatherName').value + " " + document.getElementById('stdSurname').value;
+            const fullNameLine = (document.getElementById('stdFatherName').value + " " + document.getElementById('stdSurname').value).trim();
             drawText(fullNameLine, POS.nameFull.x, POS.nameFull.y, POS.nameFull.maxWidth, 50, studentFont, false, chosenColor);
 
             // 4. Age (Static Font)
@@ -240,6 +267,7 @@
             ctx.restore();
 
             // 5. Dates (Static Font)
+            ctx.save();
             ctx.fillStyle = '#e8f6ff';
             ctx.direction = 'rtl';
             const hijriLine = document.getElementById('dateHijri').value + (document.getElementById('dayArabic').value ? "، " + document.getElementById('dayArabic').value : "");
@@ -247,31 +275,78 @@
 
             ctx.direction = 'ltr';
             drawText(document.getElementById('dateGreg').value, POS.dateX, POS.dateG_Y, 600, 52, staticFont, false, '#e8f6ff', 'right');
+            ctx.restore();
 
-            // 6. Ikhtebaar Counts (Bottom Corners)
+            // 6. Ikhtebaar Counts & Titles (Bottom Corners)
             ctx.save();
-            ctx.direction = 'rtl';
+            ctx.direction = 'ltr';
             const marhalaCountText = document.getElementById('marhalaCount').value;
             const yearCountText = document.getElementById('yearCount').value;
 
-            // Specific Marhala Ikhtebaar Count (Bottom-Left)
-            drawText(marhalaCountText, POS.countLeftX, POS.countY, null, 48, staticFont, true, '#FFFFFF', 'center');
+            // Bottom-Left: Title + Count
+            if (marhalaCountText) {
+                drawText("Marhala Count", POS.countLeftX, POS.countTitleY, 300, 32, 'Amiri', true, '#FFFFFF', 'center');
+                drawText(marhalaCountText, POS.countLeftX, POS.countY, null, 48, staticFont, true, '#FFFFFF', 'center');
+            }
 
-            // Current Year Total Ikhtebaar Count (Bottom-Right)
-            drawText(yearCountText, POS.countRightX, POS.countY, null, 48, staticFont, true, '#FFFFFF', 'center');
+            // Bottom-Right: Title + Count
+            if (yearCountText) {
+                drawText("Year Count", POS.countRightX, POS.countTitleY, 300, 32, 'Amiri', true, '#FFFFFF', 'center');
+                drawText(yearCountText, POS.countRightX, POS.countY, null, 48, staticFont, true, '#FFFFFF', 'center');
+            }
             ctx.restore();
         }
 
         function updateBackground() {
             const url = document.getElementById('templateSelect').value;
-            if(url) { bgImage.crossOrigin = "anonymous"; bgImage.src = url; bgImage.onload = draw; }
+            if (url) { 
+                bgImage.crossOrigin = "anonymous"; 
+                bgImage.src = url; 
+                bgImage.onload = draw; 
+            } else {
+                bgImage = new Image();
+                draw();
+            }
         }
 
         document.getElementById('studentUpload').onchange = (e) => {
+            if (!e.target.files[0]) return;
             const reader = new FileReader();
-            reader.onload = (f) => { studentImage = new Image(); studentImage.onload = draw; studentImage.src = f.target.result; };
+            reader.onload = (f) => { 
+                studentImage = new Image(); 
+                studentImage.onload = draw; 
+                studentImage.src = f.target.result; 
+            };
             reader.readAsDataURL(e.target.files[0]);
         };
+
+        function clearAll() {
+            // Reset text and select inputs
+            document.getElementById('templateSelect').value = "";
+            document.getElementById('instName').value = "";
+            document.getElementById('instColor').value = "#e8f6ff";
+            document.getElementById('fontSelect').value = "Amiri";
+            document.getElementById('nameColor').value = "#1a5276";
+            document.getElementById('stdFirstName').value = "";
+            document.getElementById('stdFatherName').value = "";
+            document.getElementById('stdSurname').value = "";
+            document.getElementById('stdAge').value = "";
+            document.getElementById('dayArabic').value = "";
+            document.getElementById('dateHijri').value = "";
+            document.getElementById('dateGreg').value = "";
+            document.getElementById('marhalaCount').value = "";
+            document.getElementById('yearCount').value = "";
+            
+            // Reset photo controls & images
+            document.getElementById('studentUpload').value = "";
+            document.getElementById('photoZoom').value = 1;
+            document.getElementById('photoYOffset').value = 0;
+            document.getElementById('photoBlur').value = 0;
+            studentImage = null;
+            bgImage = new Image();
+
+            draw();
+        }
 
         function download() {
             const link = document.createElement('a');
